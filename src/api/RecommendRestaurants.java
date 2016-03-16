@@ -11,12 +11,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import db.DBConnection;
+
 /**
  * Servlet implementation class RecommendRestaurants
  */
 @WebServlet("/recommendation")
 public class RecommendRestaurants extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final DBConnection connection = new DBConnection();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -33,7 +36,13 @@ public class RecommendRestaurants extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		JSONArray array = new JSONArray();
+		if (request.getParameterMap().containsKey("user_id")) {
+			String userId = request.getParameter("user_id");
+			array = connection.RecommendRestaurants(userId);
+
+		}
+		RpcParser.writeOutput(response, array);
 	}
 
 	/**
